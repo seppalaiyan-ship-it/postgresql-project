@@ -57,24 +57,29 @@
   <!-- Load Supabase JS library -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // 🔑 Replace with your values
+    // 🔑 Replace with your values from Supabase dashboard
     const SUPABASE_URL = "https://rmrcoaijuzospfrrrvyj.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc";
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    document.getElementById("loadBtn").addEventListener("click", loadUsers);
+    // Create Supabase client
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function loadUsers() {
       const { data, error } = await supabase.from("users").select("*");
 
       if (error) {
-        console.error("Error:", error);
+        console.error("Error:", error.message);
+        alert("Error loading data. Check console for details.");
         return;
       }
 
       const tbody = document.querySelector("#usersTable tbody");
-      tbody.innerHTML = ""; // clear old rows
+      tbody.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="3">No users found</td></tr>`;
+        return;
+      }
 
       data.forEach(user => {
         const row = `<tr>
@@ -85,6 +90,8 @@
         tbody.innerHTML += row;
       });
     }
+
+    document.getElementById("loadBtn").addEventListener("click", loadUsers);
   </script>
 </body>
 </html>
