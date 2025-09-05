@@ -10,11 +10,18 @@
   <ul id="userList"></ul>
 
   <script>
-    // 🔹 உங்கள் Supabase project தகவலை இங்கே வைக்கவும்
-    const SUPABASE_URL = "https://rmrcoaijuzospfrrrvyj.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc";
+    
+import { createClient } from '@supabase/supabase-js'
 
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseUrl = 'https://rmrcoaijuzospfrrrvyj.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY
+const supabase = createClient(supabaseUrl, supabaseKey)
+    
+    // 🔹 உங்கள் Supabase project தகவலை இங்கே வைக்கவும்
+//    const SUPABASE_URL = "https://rmrcoaijuzospfrrrvyj.supabase.co";
+//    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc";
+
+//    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     async function loadUsers() {
       let { data: users, error } = await supabase
