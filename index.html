@@ -1,47 +1,90 @@
 <!DOCTYPE html>
-<html lang="ta">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Supabase + PostgreSQL Demo</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase Users Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7f9;
+      padding: 20px;
+    }
+    h1 { text-align: center; }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+    th {
+      background: #4CAF50;
+      color: white;
+    }
+    tr:hover { background: #f1f1f1; }
+    #loadBtn {
+      display: block;
+      margin: 0 auto 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+    }
+    #loadBtn:hover { background: #45a049; }
+  </style>
 </head>
 <body>
-  <h1>👥 பயனர் பட்டியல் (PostgreSQL-இல் இருந்து)</h1>
-  <ul id="userList"></ul>
+  <h1>Users from Supabase</h1>
+  <button id="loadBtn">Load Data</button>
+  <table id="usersTable">
+    <thead>
+      <tr>
+        <th>ID</th><th>Name</th><th>Email</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
 
+  <!-- Load Supabase JS library -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-/*    
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = 'https://rmrcoaijuzospfrrrvyj.supabase.co'
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc";
-const supabaseKey = process.env.SUPABASE_KEY
-const supabase = createClient(supabaseUrl, supabaseKey)
- */   
-    // 🔹 உங்கள் Supabase project தகவலை இங்கே வைக்கவும்
-    const SUPABASE_URL = 'https://rmrcoaijuzospfrrrvyj.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc';
+    // 🔑 Replace with your values
+    const SUPABASE_URL = "https://rmrcoaijuzospfrrrvyj.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJtcmNvYWlqdXpvc3BmcnJydnlqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcwOTA0MjEsImV4cCI6MjA3MjY2NjQyMX0.LnZYhMHih-p3wvjgvUndHbjN-1gfs18CniXR6iz_wyc";
 
     const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    document.getElementById("loadBtn").addEventListener("click", loadUsers);
+
     async function loadUsers() {
-      let { data: users, error } = await supabase
-        .from("users")   // Table name
-        .select("*");
+      const { data, error } = await supabase.from("users").select("*");
 
       if (error) {
-        console.error("❌ Error:", error);
-      } else {
-        const list = document.getElementById("userList");
-        users.forEach(user => {
-          let li = document.createElement("li");
-          li.textContent = `${user.id}. ${user.name} (${user.email})`;
-          list.appendChild(li);
-        });
+        console.error("Error:", error);
+        return;
       }
-    }
 
-    loadUsers();
+      const tbody = document.querySelector("#usersTable tbody");
+      tbody.innerHTML = ""; // clear old rows
+
+      data.forEach(user => {
+        const row = `<tr>
+          <td>${user.id}</td>
+          <td>${user.name}</td>
+          <td>${user.email}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
   </script>
 </body>
 </html>
