@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <title>Supabase + PostgreSQL Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+</head>
+<body>
+  <h1>👥 பயனர் பட்டியல் (PostgreSQL-இல் இருந்து)</h1>
+  <ul id="userList"></ul>
+
+  <script>
+    // 🔹 உங்கள் Supabase project தகவலை இங்கே வைக்கவும்
+    const SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co";
+    const SUPABASE_KEY = "YOUR_PUBLIC_ANON_KEY";
+
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    async function loadUsers() {
+      let { data: users, error } = await supabase
+        .from("users")   // Table name
+        .select("*");
+
+      if (error) {
+        console.error("❌ Error:", error);
+      } else {
+        const list = document.getElementById("userList");
+        users.forEach(user => {
+          let li = document.createElement("li");
+          li.textContent = `${user.id}. ${user.name} (${user.email})`;
+          list.appendChild(li);
+        });
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
